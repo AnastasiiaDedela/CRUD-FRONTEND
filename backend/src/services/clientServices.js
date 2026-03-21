@@ -22,3 +22,11 @@ export const updateClient = async (id, updatedData) => {
   );
   return rows[0];
 };
+
+export const deleteClient = async (id) => {
+  const { rows } = await query(
+    "DELETE FROM clients_tb WHERE id = $1 RETURNING *",
+    [id],
+  );
+  return rows[0];
+};

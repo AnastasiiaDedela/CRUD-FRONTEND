@@ -16,7 +16,7 @@ export default function TableList({ handleOpen, searchedClients }) {
           <tbody className="hover:bg-base-300">
             {searchedClients &&
               searchedClients.map((client) => (
-                <tr>
+                <tr key={client.id}>
                   <th>{client.id}</th>
                   <td>{client.name}</td>
                   <td>{client.job}</td>
@@ -30,7 +30,10 @@ export default function TableList({ handleOpen, searchedClients }) {
                     </button>
                   </td>
                   <td>
-                    <button className="btn btn-accent" onClick={handleOpen}>
+                    <button
+                      className="btn btn-accent"
+                      onClick={() => handleOpen("edit", client)}
+                    >
                       Update
                     </button>
                   </td>

@@ -11,6 +11,7 @@ function App() {
   const [modalMode, setModalMode] = useState("add");
   const [searchTerm, setSearchTerm] = useState("");
   const [searchedClients, setSearchedClients] = useState([]);
+  const [clientData, setClientData] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -22,24 +23,27 @@ function App() {
     fetchData();
   }, [searchTerm]);
 
-  const handleOpen = (mode) => {
+  const handleOpen = (mode, client) => {
     setIsOpen(true);
     setModalMode(mode);
+    setClientData(client);
   };
 
-  const handleSubmit = async (clientData) => {
-    if (modalMode === "add") {
-      try {
-        const response = await axios.post(
-          "http://localhost:3000/api/clients",
+  const handleSubmit = async (mode, clientData) => {
+    try {
+      if (mode === "add") {
+        await axios.post("http://localhost:3000/api/clients", clientData);
+      } else {
+        await axios.put(
+          `http://localhost:3000/api/clients/${clientData.id}`,
           clientData,
         );
-        console.log("new client added : ", response);
-      } catch (err) {
-        console.error("Error adding client", err);
       }
-    } else {
-      console.log();
+    } catch (err) {
+      console.error(
+        `Error ${mode === "add" ? "adding" : "editing"} client`,
+        err,
+      );
     }
   };
 
@@ -50,15 +54,13 @@ function App() {
         searchTerm={searchTerm}
         onSearch={setSearchTerm}
       />
-      <TableList
-        handleOpen={() => handleOpen("edit")}
-        searchedClients={searchedClients}
-      />
+      <TableList handleOpen={handleOpen} searchedClients={searchedClients} />
       <ModalForm
         isOpen={isOpen}
         onClose={() => setIsOpen(false)}
         onSubmit={handleSubmit}
         mode={modalMode}
+        clientData={clientData}
       />
     </>
   );

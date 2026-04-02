@@ -1,31 +1,8 @@
-export default function TableList({ handleOpen }) {
-  const applicants = [
-    {
-      id: "0",
-      name: "Joe",
-      work: "freelance-developer",
-      location: "Morocco",
-      rate: 99,
-      isactive: true,
-    },
-    {
-      id: "1",
-      name: "Janet",
-      work: "fullstack-developer",
-      location: "Mozambique",
-      rate: 70,
-      isactive: false,
-    },
-    {
-      id: "2",
-      name: "Justin",
-      work: "fronend-developer",
-      location: "Monaco",
-      rate: 101,
-      isactive: true,
-    },
-  ];
-
+export default function TableList({
+  handleOpen,
+  searchedClients,
+  handleDelete,
+}) {
   return (
     <>
       <div className="overflow-x-auto mt-10">
@@ -41,28 +18,36 @@ export default function TableList({ handleOpen }) {
             </tr>
           </thead>
           <tbody className="hover:bg-base-300">
-            {applicants &&
-              applicants.map((user) => (
-                <tr>
-                  <th>{user.id}</th>
-                  <td>{user.name}</td>
-                  <td>{user.work}</td>
-                  <td>{user.location}</td>
-                  <td>{user.rate}</td>
+            {searchedClients &&
+              searchedClients.map((client) => (
+                <tr key={client.id}>
+                  <th>{client.id}</th>
+                  <td>{client.name}</td>
+                  <td>{client.job}</td>
+                  <td>{client.location}</td>
+                  <td>{client.rate}</td>
                   <td>
                     <button
-                      className={`btn rounded-full w-20 ${user.isactive ? `btn-primary` : `btn-outline btn-primary`}`}
+                      className={`btn rounded-full w-20 ${client.isactive ? `btn-primary` : `btn-outline btn-primary`}`}
                     >
-                      {user.isactive ? `Active` : `Inactive`}
+                      {client.isactive ? `Active` : `Inactive`}
                     </button>
                   </td>
                   <td>
-                    <button className="btn btn-accent" onClick={handleOpen}>
+                    <button
+                      className="btn btn-accent"
+                      onClick={() => handleOpen("edit", client)}
+                    >
                       Update
                     </button>
                   </td>
                   <td>
-                    <button className="btn btn-error">Delete</button>
+                    <button
+                      className="btn btn-error"
+                      onClick={() => handleDelete(client.id)}
+                    >
+                      Delete
+                    </button>
                   </td>
                 </tr>
               ))}

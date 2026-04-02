@@ -1,4 +1,4 @@
-export default function NavBar({ onOpen }) {
+export default function NavBar({ onOpen, onSearch }) {
   return (
     <div className="navbar bg-base-100 shadow-sm p-4">
       <div className="navbar-start">
@@ -10,6 +10,7 @@ export default function NavBar({ onOpen }) {
             type="text"
             placeholder="Search"
             className="input input-bordered w-48 md:w-auto"
+            onChange={(e) => onSearch(e.target.value)}
           />
         </div>
       </div>

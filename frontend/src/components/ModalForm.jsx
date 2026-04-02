@@ -1,18 +1,54 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
-export default function ModalForm({ isOpen, onClose, mode }) {
+export default function ModalForm({
+  isOpen,
+  onClose,
+  onSubmit,
+  mode,
+  clientData,
+}) {
   const [name, setName] = useState("");
   const [job, setJob] = useState("");
   const [location, setLocation] = useState("");
   const [rate, setRate] = useState(null);
   const [status, setStatus] = useState(false);
 
+  useEffect(() => {
+    if (mode === "edit" && clientData) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setName(clientData.name);
+      setJob(clientData.job);
+      setLocation(clientData.location);
+      setRate(clientData.rate);
+      setStatus(clientData.isactive);
+    } else {
+      setName("");
+      setJob("");
+      setLocation("");
+      setRate(null);
+      setStatus(false);
+    }
+  }, [mode, clientData]);
+
   const handleStatusChange = (e) => {
     setStatus(e.target.value === "Active");
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    try {
+      const payload = {
+        id: clientData?.id,
+        name,
+        job,
+        location,
+        rate: Number(rate),
+        isactive: status,
+      };
+      await onSubmit(mode, payload);
+    } catch (err) {
+      console.error("Error adding client:", err);
+    }
     onClose();
   };
 

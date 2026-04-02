@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-export default function ModalForm({ isOpen, onClose, mode }) {
+export default function ModalForm({ isOpen, onClose, onSubmit, mode }) {
   const [name, setName] = useState("");
   const [job, setJob] = useState("");
   const [location, setLocation] = useState("");
@@ -11,8 +11,14 @@ export default function ModalForm({ isOpen, onClose, mode }) {
     setStatus(e.target.value === "Active");
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    try {
+      const clientData = { name, job, location, rate, isActive: status };
+      await onSubmit(clientData);
+    } catch (err) {
+      console.error("Error adding client:", err);
+    }
     onClose();
   };
 

@@ -27,6 +27,22 @@ function App() {
     setModalMode(mode);
   };
 
+  const handleSubmit = async (clientData) => {
+    if (modalMode === "add") {
+      try {
+        const response = await axios.post(
+          "http://localhost:3000/api/clients",
+          clientData,
+        );
+        console.log("new client added : ", response);
+      } catch (err) {
+        console.error("Error adding client", err);
+      }
+    } else {
+      console.log();
+    }
+  };
+
   return (
     <>
       <NavBar
@@ -41,6 +57,7 @@ function App() {
       <ModalForm
         isOpen={isOpen}
         onClose={() => setIsOpen(false)}
+        onSubmit={handleSubmit}
         mode={modalMode}
       />
     </>

@@ -12,6 +12,7 @@ function App() {
   const [searchTerm, setSearchTerm] = useState("");
   const [searchedClients, setSearchedClients] = useState([]);
   const [clientData, setClientData] = useState(null);
+  const [refresh, setRefresh] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -21,7 +22,7 @@ function App() {
       setSearchedClients(result.data);
     };
     fetchData();
-  }, [searchTerm]);
+  }, [searchTerm, refresh]);
 
   const handleOpen = (mode, client) => {
     setIsOpen(true);
@@ -39,11 +40,26 @@ function App() {
           clientData,
         );
       }
+      setRefresh((prev) => !prev);
     } catch (err) {
       console.error(
         `Error ${mode === "add" ? "adding" : "editing"} client`,
         err,
       );
+    }
+  };
+
+  const handleDelete = async (id) => {
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this client?",
+    );
+    if (confirmDelete) {
+      try {
+        await axios.delete(`http://localhost:3000/api/clients/${id}`);
+        setRefresh((prev) => !prev);
+      } catch (err) {
+        console.error("Error deleting client", err);
+      }
     }
   };
 
@@ -54,7 +70,11 @@ function App() {
         searchTerm={searchTerm}
         onSearch={setSearchTerm}
       />
-      <TableList handleOpen={handleOpen} searchedClients={searchedClients} />
+      <TableList
+        handleOpen={handleOpen}
+        searchedClients={searchedClients}
+        handleDelete={handleDelete}
+      />
       <ModalForm
         isOpen={isOpen}
         onClose={() => setIsOpen(false)}

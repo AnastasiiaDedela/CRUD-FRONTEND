@@ -1,4 +1,8 @@
-export default function TableList({ handleOpen, searchedClients }) {
+export default function TableList({
+  handleOpen,
+  searchedClients,
+  handleDelete,
+}) {
   return (
     <>
       <div className="overflow-x-auto mt-10">
@@ -38,7 +42,12 @@ export default function TableList({ handleOpen, searchedClients }) {
                     </button>
                   </td>
                   <td>
-                    <button className="btn btn-error">Delete</button>
+                    <button
+                      className="btn btn-error"
+                      onClick={() => handleDelete(client.id)}
+                    >
+                      Delete
+                    </button>
                   </td>
                 </tr>
               ))}
